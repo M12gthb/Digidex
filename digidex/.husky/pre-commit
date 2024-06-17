@@ -1,4 +1,8 @@
-echo "Check for linting errors and run tests before commiting..."
+echo "Check for linting errors..."
+
+npm run check:fix ||
+(echo "Linting erros or tests falied. Please fix them before commiting." && exit 1)
+
 npm run check ||
 (echo "Linting erros or tests falied. Please fix them before commiting." && exit 1)
 
