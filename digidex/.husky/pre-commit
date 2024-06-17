@@ -3,5 +3,4 @@ npm run check:fix ||
 (echo 'Linting errors or tests failed. Please fix them before commiting.' && exit 1)
 
 
-
 echo 'Done'
