@@ -1,20 +1,25 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": { max: "1535px" },
+        xl: { max: "1279px" },
+        lg: { max: "1023px" },
+        md: { max: "767px" },
+        sm: { max: "639px" },
       },
     },
     extend: {
@@ -72,9 +77,25 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      placeholderColor: {
+        custom: "#9CA3AF", // cor cinza
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".placeholder-custom::placeholder": {
+          color: "#9CA3AF",
+          opacity: "0.75",
+          fontStyle: "normal",
+          textDecoration: "none",
+          fontSize: "0.70rem",
+        },
+      });
+    }),
+  ],
+} satisfies Config;
 
-export default config
+export default config;
