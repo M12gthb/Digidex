@@ -1,7 +1,6 @@
-import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -9,19 +8,7 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": { max: "1535px" },
-        xl: { max: "1279px" },
-        lg: { max: "1023px" },
-        md: { max: "767px" },
-        sm: { max: "639px" },
-      },
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -77,25 +64,28 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      placeholderColor: {
-        custom: "#9CA3AF", // cor cinza
-      },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
     plugin(function ({ addUtilities }) {
       addUtilities({
-        ".placeholder-custom::placeholder": {
-          color: "#9CA3AF",
-          opacity: "0.75",
-          fontStyle: "normal",
-          textDecoration: "none",
-          fontSize: "0.70rem",
+        ".text-shadow": {
+          textShadow: "2px 2px 0px rgba(0,0,0,0.1)", // Adicione um leve sombra ao texto
+        },
+        ".text-shadow-md": {
+          textShadow: "3px 3px 0px rgba(0,0,0,0.2)", // Adicione um médio sombra ao texto
+        },
+        ".text-shadow-lg": {
+          textShadow: "5px 5px 0px rgba(0,0,0,0.3)", // Adicione um grande sombra ao texto
+        },
+        ".text-outline": {
+          textShadow:
+            "1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000", // Bordas em todas as direções
         },
       });
     }),
   ],
-} satisfies Config;
+};
 
 export default config;
