@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,6 +15,7 @@ function Footer() {
             src="/My-Image.jpeg"
             className="object-cover w-full h-full"
           />
+          <AvatarFallback>MB</AvatarFallback>
         </Avatar>
         <p>Dev: Matheus Barros</p>
       </Link>
