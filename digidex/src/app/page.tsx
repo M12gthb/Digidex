@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+// src/pages/home.tsx
+import React, { useEffect, useState } from "react";
 import { api } from "@/services/api";
-import { Cards } from "@/components/Cards";
 import { IDigimon, IDigimonInfos } from "@/interfaces/Digimon";
 import { Button } from "@/components/ui/button";
+import Cards from "@/components/Cards";
 
-export default function Home() {
+function Home() {
   const [digimons, setDigimons] = useState<IDigimon[]>([]);
   const [digimonsInfos, setDigimonsInfos] = useState<IDigimonInfos[]>([]);
   const [displayedDigimons, setDisplayedDigimons] = useState<IDigimonInfos[]>(
@@ -28,13 +29,8 @@ export default function Home() {
       );
 
       const infos = await Promise.all(infosPromises);
-      const favoriteDigimons = infos.map((info) => {
-        const isFavorite = localStorage.getItem(`favoriteDigimon-${info.id}`);
-        return { ...info, isFavorite: !!isFavorite };
-      });
-
-      setDigimonsInfos(favoriteDigimons);
-      setDisplayedDigimons(favoriteDigimons.slice(0, DIGIMONS_PER_PAGE));
+      setDigimonsInfos(infos);
+      setDisplayedDigimons(infos.slice(0, DIGIMONS_PER_PAGE));
     } catch (err) {
       console.error(err);
     }
@@ -50,6 +46,13 @@ export default function Home() {
     setCurrentPage(nextPage);
   };
 
+  const toggleFavorite = (updatedDigimon: IDigimonInfos) => {
+    const updatedList = digimonsInfos.map((digimon) =>
+      digimon.id === updatedDigimon.id ? updatedDigimon : digimon
+    );
+    setDigimonsInfos(updatedList);
+  };
+
   useEffect(() => {
     getDigimons();
   }, []);
@@ -59,7 +62,10 @@ export default function Home() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-[10px]">
         {displayedDigimons.map((digimon) => (
           <li key={digimon.id} className="flex justify-center">
-            <Cards digimon={digimon} />
+            <Cards
+              digimon={digimon}
+              onToggleFavorite={() => toggleFavorite(digimon)}
+            />
           </li>
         ))}
       </ul>
@@ -69,10 +75,12 @@ export default function Home() {
             onClick={loadMoreDigimons}
             className="mt-4 p-2 bg-blue-500 text-white rounded"
           >
-            Carregar mais Digimons
+            Carregar mais digimons
           </Button>
         </div>
       )}
     </main>
   );
 }
+
+export default Home;

@@ -1,11 +1,19 @@
-import React from "react";
+// src/components/Cards/index.tsx
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { useColor } from "color-thief-react";
 import { IDigimonInfos } from "@/interfaces/Digimon";
 import Link from "next/link";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
-export function Cards({ digimon }: { digimon: IDigimonInfos }) {
+export function Cards({
+  digimon,
+  onToggleFavorite,
+}: {
+  digimon: IDigimonInfos;
+  onToggleFavorite: () => void;
+}) {
   const { data: color } = useColor(
     `/api/proxy?url=${encodeURIComponent(digimon.images[0].href)}`,
     "hex",
@@ -17,10 +25,35 @@ export function Cards({ digimon }: { digimon: IDigimonInfos }) {
   const gradientBackground = color
     ? `linear-gradient(to bottom right, ${color}, #ffffff)`
     : "linear-gradient(to bottom right, #ffffff, #ffffff)";
+
+  const [isStarred, setIsStarred] = useState(false);
+
+  useEffect(() => {
+    const favorite = localStorage.getItem(`favoriteDigimon-${digimon.id}`);
+    setIsStarred(!!favorite);
+  }, [digimon.id]);
+
+  const handleStarClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isStarred) {
+      localStorage.setItem(
+        `favoriteDigimon-${digimon.id}`,
+        JSON.stringify(digimon)
+      );
+    } else {
+      localStorage.removeItem(`favoriteDigimon-${digimon.id}`);
+    }
+    setIsStarred(!isStarred);
+    onToggleFavorite(); // Atualiza o estado do favorito no componente pai (Home)
+  };
+
   return (
-    <Link href={`/digimon/${digimon.id}`} className="w-[200px] h-[220px]">
+    <Link
+      href={`/digimon/${digimon.id}`}
+      className="w-[200px] h-[250px] relative group"
+    >
       <Card
-        className="w-[200px] h-[220px] mb-[10px] py-[10px] px-0 flex items-center flex-col"
+        className="w-[200px] h-[250px] mb-[10px] py-[10px] px-0 flex items-center flex-col"
         style={{
           backgroundImage: gradientBackground,
           border: "none",
@@ -46,6 +79,16 @@ export function Cards({ digimon }: { digimon: IDigimonInfos }) {
             {digimon.name}
           </CardTitle>
         </CardHeader>
+        <div
+          onClick={handleStarClick}
+          className="absolute bottom-2 right-2 text-xl cursor-pointer"
+        >
+          {isStarred ? (
+            <AiFillStar className="text-yellow-500" />
+          ) : (
+            <AiOutlineStar className="text-yellow-500 group-hover:block hidden" />
+          )}
+        </div>
       </Card>
     </Link>
   );
