@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -93,7 +92,7 @@ function Header() {
                 </SheetTitle>
               </SheetHeader>
               <CustomInput />
-              <ul className="w-[100%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-auto">
+              <ul className="w-[107%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-hidden">
                 {filteredDigimons.map((digimon) => (
                   <li
                     key={digimon.id}
@@ -112,7 +111,7 @@ function Header() {
                     <AiFillStar
                       className="text-yellow-500 cursor-pointer"
                       onClick={(e) => {
-                        e.stopPropagation(); // Impede que o clique na estrela redirecione
+                        e.stopPropagation();
                         toggleFavorite(digimon);
                       }}
                     />
