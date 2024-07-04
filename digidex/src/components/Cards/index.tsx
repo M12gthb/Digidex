@@ -9,13 +9,9 @@ import { useDigimonContext } from "@/context/DigimonContext";
 
 export function Cards({ digimon }: { digimon: IDigimonInfos }) {
   const { toggleFavorite, favoriteDigimons } = useDigimonContext();
-  const { data: color } = useColor(
-    `/api/proxy?url=${encodeURIComponent(digimon.images[0].href)}`,
-    "hex",
-    {
-      crossOrigin: "anonymous",
-    }
-  );
+  const { data: color } = useColor(digimon.images[0].href, "hex", {
+    crossOrigin: "anonymous",
+  });
 
   const gradientBackground = color
     ? `linear-gradient(to bottom right, ${color}, #ffffff)`
@@ -39,9 +35,7 @@ export function Cards({ digimon }: { digimon: IDigimonInfos }) {
         <CardContent className="p-0">
           <Image
             src={
-              digimon.images[0].href
-                ? `/api/proxy?url=${encodeURIComponent(digimon.images[0].href)}`
-                : "/images.png"
+              digimon.images[0].href ? digimon.images[0].href : "/images.png"
             }
             alt={digimon.name}
             width={100}
