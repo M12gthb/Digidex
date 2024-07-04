@@ -43,6 +43,16 @@ function Header() {
     setIsOpen(!isOpen);
   };
 
+  const handleLiClick = (e: React.MouseEvent, digimonId: number) => {
+    if (
+      (e.target as HTMLElement).tagName !== "svg" &&
+      (e.target as HTMLElement).tagName !== "path"
+    ) {
+      window.location.href = `/digimon/${digimonId}`;
+      setIsOpen(false);
+    }
+  };
+
   const filteredDigimons = favoriteDigimons.filter((digimon) =>
     digimon.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -88,6 +98,7 @@ function Header() {
                   <li
                     key={digimon.id}
                     className="flex items-center gap-x-2 hover:shadow-inner hover:shadow-white cursor-pointer"
+                    onClick={(e) => handleLiClick(e, digimon.id)}
                   >
                     <div className="flex items-center gap-x-2">
                       <Image
@@ -101,7 +112,7 @@ function Header() {
                     <AiFillStar
                       className="text-yellow-500 cursor-pointer"
                       onClick={(e) => {
-                        e.preventDefault();
+                        e.stopPropagation(); // Impede que o clique na estrela redirecione
                         toggleFavorite(digimon);
                       }}
                     />
