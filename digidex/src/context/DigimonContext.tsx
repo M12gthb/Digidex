@@ -13,6 +13,7 @@ interface DigimonContextProps {
   digimons: IDigimon[];
   digimonsInfos: IDigimonInfos[];
   displayedDigimons: IDigimonInfos[];
+  pageDigimons: IDigimonInfos[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   loadMoreDigimons: () => void;
@@ -30,6 +31,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [displayedDigimons, setDisplayedDigimons] = useState<IDigimonInfos[]>(
     []
   );
+  const [pageDigimons, setPagedDigimons] = useState<IDigimonInfos[]>([]);
   const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimonInfos[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,7 +50,8 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         );
         const infos = await Promise.all(infosPromises);
         setDigimonsInfos(infos);
-        setDisplayedDigimons(infos.slice(0, DIGIMONS_PER_PAGE));
+        setDisplayedDigimons(infos.slice(0, 1460));
+        setPagedDigimons(infos.slice(0, DIGIMONS_PER_PAGE));
       } catch (err) {
         console.error(err);
       }
@@ -77,7 +80,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
       nextPage * DIGIMONS_PER_PAGE,
       (nextPage + 1) * DIGIMONS_PER_PAGE
     );
-    setDisplayedDigimons([...displayedDigimons, ...newDigimons]);
+    setPagedDigimons([...pageDigimons, ...newDigimons]);
     setCurrentPage(nextPage);
   };
 
@@ -112,6 +115,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         loadMoreDigimons,
         toggleFavorite,
         favoriteDigimons,
+        pageDigimons,
       }}
     >
       {children}
