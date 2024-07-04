@@ -26,7 +26,7 @@ export function Cards({ digimon }: { digimon: IDigimonInfos }) {
   return (
     <Link
       href={`/digimon/${digimon.id}`}
-      className="w-[200px] h-[250px] relative group"
+      className="w-[200px] h-[250px] relative group hover:opacity-90"
     >
       <Card
         className="w-[200px] h-[250px] mb-[10px] py-[10px] px-0 flex items-center flex-col"
