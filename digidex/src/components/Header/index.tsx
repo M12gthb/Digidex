@@ -20,7 +20,12 @@ import { useDigimonContext } from "@/context/DigimonContext";
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
-  const { favoriteDigimons, searchTerm, toggleFavorite } = useDigimonContext();
+  const { favoriteDigimons, toggleFavorite, searchTerm, setSearchTerm } =
+    useDigimonContext();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -91,7 +96,7 @@ function Header() {
                   Digimons Favoritos <MdOutlineStarOutline />
                 </SheetTitle>
               </SheetHeader>
-              <CustomInput />
+              <CustomInput onChange={handleChange} value={searchTerm} />
               <ul className="w-[107%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-hidden">
                 {filteredDigimons.map((digimon) => (
                   <li
