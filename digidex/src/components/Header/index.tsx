@@ -1,5 +1,5 @@
 "use client";
-// src/components/Header/index.tsx
+
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,18 +15,13 @@ import {
   SheetOverlay,
 } from "@/components/ui/sheet";
 import CustomInput from "../CustomInput";
-import { IDigimonInfos } from "@/interfaces/Digimon";
 import { X } from "lucide-react";
+import { useDigimonContext } from "@/context/DigimonContext";
 
 function Header() {
-  const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimonInfos[]>([]);
-  const [filteredDigimons, setFilteredDigimons] = useState<IDigimonInfos[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    loadFavoritesFromLocalStorage();
-  }, []);
+  const { favoriteDigimons, searchTerm, toggleFavorite } = useDigimonContext();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,42 +39,13 @@ function Header() {
     };
   }, []);
 
-  const loadFavoritesFromLocalStorage = () => {
-    const storedFavorites = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith("favoriteDigimon-")) {
-        const favoriteDigimon = localStorage.getItem(key);
-        if (favoriteDigimon) {
-          storedFavorites.push(JSON.parse(favoriteDigimon));
-        }
-      }
-    }
-    setFavoriteDigimons(storedFavorites);
-    setFilteredDigimons(storedFavorites);
-  };
-
-  const handleStarClick = (e: React.MouseEvent, id: number) => {
-    e.preventDefault();
-    const updatedFavorites = favoriteDigimons.filter(
-      (digimon) => digimon.id !== id
-    );
-    setFavoriteDigimons(updatedFavorites);
-    setFilteredDigimons(updatedFavorites);
-    localStorage.removeItem(`favoriteDigimon-${id}`);
-  };
-
   const toggleSheet = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value.toLowerCase();
-    const filtered = favoriteDigimons.filter((digimon) =>
-      digimon.name.toLowerCase().includes(searchValue)
-    );
-    setFilteredDigimons(filtered);
-  };
+  const filteredDigimons = favoriteDigimons.filter((digimon) =>
+    digimon.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <header className="w-full bg-zinc-900 min-h-[15vh] flex items-center justify-between px-[5%]">
@@ -116,7 +82,7 @@ function Header() {
                   Digimons Favoritos <MdOutlineStarOutline />
                 </SheetTitle>
               </SheetHeader>
-              <CustomInput onChange={handleInputChange} />
+              <CustomInput />
               <ul className="w-[100%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-auto">
                 {filteredDigimons.map((digimon) => (
                   <li
@@ -134,7 +100,10 @@ function Header() {
                     </div>
                     <AiFillStar
                       className="text-yellow-500 cursor-pointer"
-                      onClick={(e) => handleStarClick(e, digimon.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(digimon);
+                      }}
                     />
                   </li>
                 ))}

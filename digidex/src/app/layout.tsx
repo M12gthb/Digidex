@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
+import { DigimonProvider } from "@/context/DigimonContext";
 interface MyMetadata extends Metadata {
   title: string;
   description: string;
@@ -32,9 +32,11 @@ export default function RootLayout({
         <meta name="description" content={metadata.description} />
       </head>
       <body className="bg-zinc-800">
-        <Header />
-        {children}
-        <Footer />
+        <DigimonProvider>
+          <Header />
+          {children}
+          <Footer />
+        </DigimonProvider>
       </body>
     </html>
   );

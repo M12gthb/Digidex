@@ -1,19 +1,14 @@
-// src/components/Cards/index.tsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { useColor } from "color-thief-react";
 import { IDigimonInfos } from "@/interfaces/Digimon";
 import Link from "next/link";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { useDigimonContext } from "@/context/DigimonContext";
 
-export function Cards({
-  digimon,
-  onToggleFavorite,
-}: {
-  digimon: IDigimonInfos;
-  onToggleFavorite: () => void;
-}) {
+export function Cards({ digimon }: { digimon: IDigimonInfos }) {
+  const { toggleFavorite, favoriteDigimons } = useDigimonContext();
   const { data: color } = useColor(
     `/api/proxy?url=${encodeURIComponent(digimon.images[0].href)}`,
     "hex",
@@ -26,26 +21,7 @@ export function Cards({
     ? `linear-gradient(to bottom right, ${color}, #ffffff)`
     : "linear-gradient(to bottom right, #ffffff, #ffffff)";
 
-  const [isStarred, setIsStarred] = useState(false);
-
-  useEffect(() => {
-    const favorite = localStorage.getItem(`favoriteDigimon-${digimon.id}`);
-    setIsStarred(!!favorite);
-  }, [digimon.id]);
-
-  const handleStarClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!isStarred) {
-      localStorage.setItem(
-        `favoriteDigimon-${digimon.id}`,
-        JSON.stringify(digimon)
-      );
-    } else {
-      localStorage.removeItem(`favoriteDigimon-${digimon.id}`);
-    }
-    setIsStarred(!isStarred);
-    onToggleFavorite(); // Atualiza o estado do favorito no componente pai (Home)
-  };
+  const isFavorite = favoriteDigimons.some((fav) => fav.id === digimon.id);
 
   return (
     <Link
@@ -80,10 +56,13 @@ export function Cards({
           </CardTitle>
         </CardHeader>
         <div
-          onClick={handleStarClick}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleFavorite(digimon);
+          }}
           className="absolute bottom-2 right-2 text-xl cursor-pointer"
         >
-          {isStarred ? (
+          {isFavorite ? (
             <AiFillStar className="text-yellow-500" />
           ) : (
             <AiOutlineStar className="text-yellow-500 group-hover:block hidden" />
