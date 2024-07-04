@@ -7,9 +7,9 @@ interface CustomInputProps {
   value: string;
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({ onChange, value }) => {
+const CustomInputHome: React.FC<CustomInputProps> = ({ onChange, value }) => {
   return (
-    <div className="border-none bg-zinc-700 rounded h-[40px] text-gray-300 relative">
+    <div className="border-none bg-zinc-700 rounded h-[40px] w-full max-w-[500px] text-gray-300 relative">
       <Input
         type="search"
         placeholder="Pesquise seu digimon aqui..."
@@ -22,4 +22,4 @@ const CustomInput: React.FC<CustomInputProps> = ({ onChange, value }) => {
   );
 };
 
-export default CustomInput;
+export default CustomInputHome;
