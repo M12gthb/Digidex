@@ -1,24 +1,35 @@
 "use client";
-import {
+import React, {
   createContext,
   useState,
   useContext,
   useEffect,
   ReactNode,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { IDigimon, IDigimonInfos } from "@/interfaces/Digimon";
 import { api } from "@/services/api";
 
 interface DigimonContextProps {
-  digimons: IDigimon[];
+  digimons: IDigimonInfos[];
   digimonsInfos: IDigimonInfos[];
   displayedDigimons: IDigimonInfos[];
   pageDigimons: IDigimonInfos[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  setDisplayedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
+  setPagedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
+  setDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
   loadMoreDigimons: () => void;
   toggleFavorite: (updatedDigimon: IDigimonInfos) => void;
   favoriteDigimons: IDigimonInfos[];
+  DIGIMONS_PER_PAGE: number;
+  setCurrentSortOrder: Dispatch<SetStateAction<string>>;
+  setCurrentFilterLevel: Dispatch<SetStateAction<string>>;
+  applyFiltersAndSort: (digimons: IDigimonInfos[]) => IDigimonInfos[];
+  currentSortOrder: string;
+  currentFilterLevel: string;
 }
 
 const DigimonContext = createContext<DigimonContextProps | undefined>(
@@ -26,7 +37,7 @@ const DigimonContext = createContext<DigimonContextProps | undefined>(
 );
 
 export const DigimonProvider = ({ children }: { children: ReactNode }) => {
-  const [digimons, setDigimons] = useState<IDigimon[]>([]);
+  const [digimons, setDigimons] = useState<IDigimonInfos[]>([]);
   const [digimonsInfos, setDigimonsInfos] = useState<IDigimonInfos[]>([]);
   const [displayedDigimons, setDisplayedDigimons] = useState<IDigimonInfos[]>(
     []
@@ -35,19 +46,22 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimonInfos[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentFilterLevel, setCurrentFilterLevel] = useState<string>("All");
+  const [currentSortOrder, setCurrentSortOrder] = useState<string>("asc");
   const DIGIMONS_PER_PAGE = 12;
 
   useEffect(() => {
     const getDigimons = async () => {
       try {
         const response = await api.get("/digimon?pageSize=1460");
-        setDigimons(response.data.content);
-        const infosPromises = response.data.content.map(
-          async (element: IDigimon) => {
-            const responseInfos = await api.get(element.href);
-            return responseInfos.data;
-          }
-        );
+        const digimonData = response.data.content;
+        setDigimons(digimonData);
+
+        const infosPromises = digimonData.map(async (element: IDigimon) => {
+          const responseInfos = await api.get(element.href);
+          return responseInfos.data;
+        });
+
         const infos = await Promise.all(infosPromises);
         setDigimonsInfos(infos);
         setDisplayedDigimons(infos.slice(0, 1460));
@@ -59,6 +73,12 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     getDigimons();
     loadFavoritesFromLocalStorage();
   }, []);
+
+  useEffect(() => {
+    const filteredAndSorted = applyFiltersAndSort(digimonsInfos);
+    setDisplayedDigimons(filteredAndSorted);
+    setPagedDigimons(filteredAndSorted.slice(0, DIGIMONS_PER_PAGE));
+  }, [digimonsInfos, searchTerm, currentFilterLevel, currentSortOrder]);
 
   const loadFavoritesFromLocalStorage = () => {
     const storedFavorites = [];
@@ -76,7 +96,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
 
   const loadMoreDigimons = () => {
     const nextPage = currentPage + 1;
-    const newDigimons = digimonsInfos.slice(
+    const newDigimons = displayedDigimons.slice(
       nextPage * DIGIMONS_PER_PAGE,
       (nextPage + 1) * DIGIMONS_PER_PAGE
     );
@@ -104,6 +124,34 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     setFavoriteDigimons(updatedFavorites);
   };
 
+  const applyFiltersAndSort = (digimons: IDigimonInfos[]) => {
+    let filtered = digimons;
+
+    if (searchTerm) {
+      filtered = filtered.filter((digimon) =>
+        digimon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (currentFilterLevel !== "All") {
+      filtered = filtered.filter(
+        (digimon) =>
+          digimon.levels &&
+          digimon.levels.some((level) => level.level === currentFilterLevel)
+      );
+    }
+
+    const sorted = filtered.sort((a, b) => {
+      if (currentSortOrder === "asc") {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+
+    return sorted;
+  };
+
   return (
     <DigimonContext.Provider
       value={{
@@ -116,6 +164,15 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         toggleFavorite,
         favoriteDigimons,
         pageDigimons,
+        setDisplayedDigimons,
+        setPagedDigimons,
+        DIGIMONS_PER_PAGE,
+        setDigimons,
+        setCurrentSortOrder,
+        setCurrentFilterLevel,
+        applyFiltersAndSort,
+        currentSortOrder,
+        currentFilterLevel,
       }}
     >
       {children}
