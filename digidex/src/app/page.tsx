@@ -90,6 +90,12 @@ const Home = () => {
                   {item.label}
                 </SelectItem>
               ))}
+              <SelectItem
+                className="bg-black text-cyan-50 border-none cursor-pointer"
+                value="xAntibody"
+              >
+                X-Antibody
+              </SelectItem>
             </SelectContent>
           </Select>
           <Select onValueChange={handleSortOrder}>
