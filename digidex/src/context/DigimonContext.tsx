@@ -1,5 +1,4 @@
 "use client";
-
 import React, {
   createContext,
   useState,
@@ -18,7 +17,9 @@ interface DigimonContextProps {
   displayedDigimons: IDigimonInfos[];
   pageDigimons: IDigimonInfos[];
   searchTerm: string;
+  searchTermHeader: string;
   setSearchTerm: (term: string) => void;
+  setSearchTermHeader: (term: string) => void;
   setDisplayedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
   setPagedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
   setDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
@@ -55,6 +56,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimonInfos[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermHeader, setSearchTermHeader] = useState("");
   const [currentFilterLevel, setCurrentFilterLevel] = useState<string>("All");
   const [currentTypeLevel, setCurrentTypeLevel] = useState<string>("All");
   const [currentAttributeLevel, setCurrentAttributeLevel] =
@@ -242,6 +244,8 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         setCurrentFieldLevel,
         setCurrentDateLevel,
         currentDateLevel,
+        setSearchTermHeader,
+        searchTermHeader,
       }}
     >
       {children}
