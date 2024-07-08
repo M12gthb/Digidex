@@ -17,7 +17,7 @@ const CustomInput: React.FC<CustomInputProps> = ({ onChange, value }) => {
         value={value}
         onChange={onChange}
       />
-      <IoSearchSharp className="absolute top-[13px] right-[16px]" />
+      <IoSearchSharp className="absolute top-[8px] right-[10px] sm:top-[10px]" />
     </div>
   );
 };
