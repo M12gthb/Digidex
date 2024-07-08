@@ -1,4 +1,5 @@
 "use client";
+
 import React, {
   createContext,
   useState,
@@ -27,9 +28,17 @@ interface DigimonContextProps {
   DIGIMONS_PER_PAGE: number;
   setCurrentSortOrder: Dispatch<SetStateAction<string>>;
   setCurrentFilterLevel: Dispatch<SetStateAction<string>>;
+  setCurrentTypeLevel: Dispatch<SetStateAction<string>>;
+  setCurrentAttributeLevel: Dispatch<SetStateAction<string>>;
+  setCurrentFieldLevel: Dispatch<SetStateAction<string>>;
+  setCurrentDateLevel: Dispatch<SetStateAction<string>>;
   applyFiltersAndSort: (digimons: IDigimonInfos[]) => IDigimonInfos[];
   currentSortOrder: string;
   currentFilterLevel: string;
+  currentTypeLevel: string;
+  currentAttributeLevel: string;
+  currentFieldLevel: string;
+  currentDateLevel: string;
 }
 
 const DigimonContext = createContext<DigimonContextProps | undefined>(
@@ -47,7 +56,12 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentFilterLevel, setCurrentFilterLevel] = useState<string>("All");
-  const [currentSortOrder, setCurrentSortOrder] = useState<string>("");
+  const [currentTypeLevel, setCurrentTypeLevel] = useState<string>("All");
+  const [currentAttributeLevel, setCurrentAttributeLevel] =
+    useState<string>("All");
+  const [currentFieldLevel, setCurrentFieldLevel] = useState<string>("All");
+  const [currentDateLevel, setCurrentDateLevel] = useState<string>("All");
+  const [currentSortOrder, setCurrentSortOrder] = useState<string>("All");
   const DIGIMONS_PER_PAGE = 12;
 
   useEffect(() => {
@@ -78,10 +92,19 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     const filteredAndSorted = applyFiltersAndSort(digimonsInfos);
     setDisplayedDigimons(filteredAndSorted);
     setPagedDigimons(filteredAndSorted.slice(0, DIGIMONS_PER_PAGE));
-  }, [digimonsInfos, searchTerm, currentFilterLevel, currentSortOrder]);
+  }, [
+    digimonsInfos,
+    searchTerm,
+    currentFilterLevel,
+    currentTypeLevel,
+    currentAttributeLevel,
+    currentFieldLevel,
+    currentDateLevel,
+    currentSortOrder,
+  ]);
 
   const loadFavoritesFromLocalStorage = () => {
-    const storedFavorites = [];
+    const storedFavorites: IDigimonInfos[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith("favoriteDigimon-")) {
@@ -142,6 +165,39 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
           digimon.levels.some((level) => level.level === currentFilterLevel)
       );
     }
+
+    if (currentTypeLevel !== "All") {
+      filtered = filtered.filter(
+        (digimon) =>
+          digimon.types &&
+          digimon.types.some((type) => type.type === currentTypeLevel)
+      );
+    }
+
+    if (currentAttributeLevel !== "All") {
+      filtered = filtered.filter(
+        (digimon) =>
+          digimon.attributes &&
+          digimon.attributes.some(
+            (attribute) => attribute.attribute === currentAttributeLevel
+          )
+      );
+    }
+
+    if (currentFieldLevel !== "All") {
+      filtered = filtered.filter(
+        (digimon) =>
+          digimon.fields &&
+          digimon.fields.some((field) => field.field === currentFieldLevel)
+      );
+    }
+
+    if (currentDateLevel !== "All") {
+      filtered = filtered.filter(
+        (digimon) => digimon.releaseDate === currentDateLevel
+      );
+    }
+
     const sorted = filtered.sort((a, b) => {
       if (currentSortOrder === "asc") {
         return a.name.localeCompare(b.name);
@@ -178,6 +234,14 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         applyFiltersAndSort,
         currentSortOrder,
         currentFilterLevel,
+        currentTypeLevel,
+        setCurrentTypeLevel,
+        currentAttributeLevel,
+        setCurrentAttributeLevel,
+        currentFieldLevel,
+        setCurrentFieldLevel,
+        setCurrentDateLevel,
+        currentDateLevel,
       }}
     >
       {children}
