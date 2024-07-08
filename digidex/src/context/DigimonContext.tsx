@@ -47,7 +47,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentFilterLevel, setCurrentFilterLevel] = useState<string>("All");
-  const [currentSortOrder, setCurrentSortOrder] = useState<string>("asc");
+  const [currentSortOrder, setCurrentSortOrder] = useState<string>("");
   const DIGIMONS_PER_PAGE = 12;
 
   useEffect(() => {
@@ -133,19 +133,24 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
       );
     }
 
-    if (currentFilterLevel !== "All") {
+    if (currentFilterLevel === "xAntibody") {
+      filtered = filtered.filter((element) => element.xAntibody === true);
+    } else if (currentFilterLevel !== "All") {
       filtered = filtered.filter(
         (digimon) =>
           digimon.levels &&
           digimon.levels.some((level) => level.level === currentFilterLevel)
       );
     }
-
     const sorted = filtered.sort((a, b) => {
       if (currentSortOrder === "asc") {
         return a.name.localeCompare(b.name);
-      } else {
+      } else if (currentSortOrder === "des") {
         return b.name.localeCompare(a.name);
+      } else if (currentSortOrder === "desId") {
+        return b.id - a.id;
+      } else {
+        return a.id - b.id;
       }
     });
 
