@@ -17,12 +17,12 @@ interface ILevels {
 
 interface ITypes {
   id: number;
-  attribute: string;
+  type: string;
 }
 
 interface IAttributes {
   id: number;
-  type: string;
+  attribute: string;
 }
 
 interface IFields {
