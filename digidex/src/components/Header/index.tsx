@@ -101,11 +101,11 @@ function Header() {
                 </SheetTitle>
               </SheetHeader>
               <CustomInput onChange={handleChange} value={searchTermHeader} />
-              <ul className="w-[107%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-hidden">
+              <ul className="w-[107%] flex flex-col justify-start gap-3 mt-[10px] overflow-y-hidden pr-3">
                 {filteredDigimons.map((digimon) => (
                   <li
                     key={digimon.id}
-                    className="flex items-center gap-x-2 hover:shadow-inner hover:shadow-white cursor-pointer text-[0.7rem] sm:text-[1rem]"
+                    className="flex items-center gap-x-2 hover:shadow-inner hover:shadow-white cursor-pointer text-[0.7rem] sm:text-[1rem] justify-between"
                     onClick={(e) => handleLiClick(e, digimon.id)}
                   >
                     <div className="flex items-center gap-x-2">
@@ -118,7 +118,7 @@ function Header() {
                       <p>{digimon.name}</p>
                     </div>
                     <AiFillStar
-                      className="text-yellow-500 cursor-pointer"
+                      className="text-yellow-500 cursor-pointer hover:text-transparent"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleFavorite(digimon);
