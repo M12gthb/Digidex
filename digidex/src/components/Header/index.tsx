@@ -105,7 +105,7 @@ function Header() {
                 {filteredDigimons.map((digimon) => (
                   <li
                     key={digimon.id}
-                    className="flex items-center gap-x-2 hover:shadow-inner hover:shadow-white cursor-pointer text-[0.7rem] sm:text-[1rem] justify-between"
+                    className="flex w-full items-center gap-x-2 hover:shadow-inner hover:shadow-white cursor-pointer text-[0.66rem] sm:text-[1rem] justify-between"
                     onClick={(e) => handleLiClick(e, digimon.id)}
                   >
                     <div className="flex items-center gap-x-2">
