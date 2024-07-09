@@ -40,6 +40,8 @@ interface DigimonContextProps {
   currentAttributeLevel: string;
   currentFieldLevel: string;
   currentDateLevel: string;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 const DigimonContext = createContext<DigimonContextProps | undefined>(
@@ -64,6 +66,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [currentFieldLevel, setCurrentFieldLevel] = useState<string>("All");
   const [currentDateLevel, setCurrentDateLevel] = useState<string>("All");
   const [currentSortOrder, setCurrentSortOrder] = useState<string>("All");
+  const [loading, setLoading] = useState(true);
   const DIGIMONS_PER_PAGE = 12;
 
   useEffect(() => {
@@ -84,6 +87,8 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         setPagedDigimons(infos.slice(0, DIGIMONS_PER_PAGE));
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     getDigimons();
@@ -246,6 +251,8 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         currentDateLevel,
         setSearchTermHeader,
         searchTermHeader,
+        loading,
+        setLoading,
       }}
     >
       {children}

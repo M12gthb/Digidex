@@ -36,9 +36,11 @@ const Home = () => {
     setCurrentAttributeLevel,
     setCurrentFieldLevel,
     setCurrentDateLevel,
+    loading,
   } = useDigimonContext();
 
   const [searchInput, setSearchInput] = useState("");
+  const LoadingArray = Array.from({ length: 12 }, (_, index) => index);
 
   useEffect(() => {
     setSearchTerm(searchInput);
@@ -76,12 +78,12 @@ const Home = () => {
       const filteredDigimons = digimonsInfos.filter(
         (digimon) => digimon.types && digimon.types.some((t) => t.type === type)
       );
-      console.log(filteredDigimons);
       applyFiltersAndSort(filteredDigimons);
     } else {
       applyFiltersAndSort(digimonsInfos);
     }
   };
+
   const handleAtributeFilter = (attribute: string) => {
     setCurrentAttributeLevel(attribute);
     if (attribute !== "All") {
@@ -95,6 +97,7 @@ const Home = () => {
       applyFiltersAndSort(digimonsInfos);
     }
   };
+
   const handleFiledFilter = (field: string) => {
     setCurrentFieldLevel(field);
     if (field !== "All") {
@@ -189,9 +192,7 @@ const Home = () => {
             Filtros personalizados
           </PopoverTrigger>
           <PopoverContent className="bg-black">
-            <div className="w-full h-full flex flex-col gap-1" typeof="submit">
-              <div className="flex flex-col gap-2"></div>
-              <div className="flex flex-col gap-2"></div>
+            <div className="w-full h-full flex flex-col gap-1">
               <div className="flex flex-col gap-2">
                 <h2 className="text-white">Type</h2>
                 <Select onValueChange={handleTypeFilter}>
@@ -272,11 +273,22 @@ const Home = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-[10px]">
-        {pageDigimons.map((digimon) => (
-          <Cards key={digimon.id} digimon={digimon} />
-        ))}
-      </ul>
+      {loading ? (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-[10px]">
+          {LoadingArray.map((index) => (
+            <li
+              key={index}
+              className="w-[200px] h-[250px] mb-[10px] py-[10px] px-0 flex items-center flex-col bg-gray-300 dark:bg-gray-600 rounded-sm animate-pulse"
+            ></li>
+          ))}
+        </ul>
+      ) : (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-[10px]">
+          {pageDigimons.map((digimon) => (
+            <Cards key={digimon.id} digimon={digimon} />
+          ))}
+        </ul>
+      )}
       {pageDigimons.length < displayedDigimons.length && (
         <div className="w-full flex items-center justify-center">
           <Button
