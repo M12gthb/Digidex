@@ -50,7 +50,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
 
   return (
     <div className="min-h-[70vh]">
-      <h1 className="w-full text-3xl text-white mt-3 mb-3 flex items-center justify-center">
+      <h1 className="w-full text-3xl text-center text-white mt-3 mb-6 flex items-center justify-center">
         {digimon.name}
       </h1>
       <div className="flex items-center flex-col sm:flex-row mb-3 sm:px-4 gap-3">
@@ -59,19 +59,21 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           alt={digimon.name}
           width={250}
           height={250}
-          className="rounded-sm sm:w-[400px] sm:h-[400px]"
+          className="rounded-sm sm:w-[400px] sm:h-[400px] flex"
         />
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:items-start h-full gap-3  sm:w-full min-h-[250px] px-2">
           {digimon.levels.length > 0 ? (
-            <h1 className="text-3xl text-white">
+            <h1 className="text-3xl text-white text-center">
               Level: {digimon.levels[0].level}
             </h1>
           ) : (
-            <h1 className="text-3xl text-white">Level: Desconhecido</h1>
+            <h1 className="text-3xl text-white text-center">
+              Level: Desconhecido
+            </h1>
           )}
 
           {digimon.types.length > 0 ? (
-            <h1 className="text-3xl text-white">
+            <h1 className="text-3xl text-white text-center">
               Type: {digimon.types[0].type}
             </h1>
           ) : (
@@ -79,12 +81,12 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           )}
 
           {digimon.xAntibody == true ? (
-            <h1 className="text-3xl text-white">Anticorpo X</h1>
+            <h1 className="text-3xl text-white text-center">Anticorpo X</h1>
           ) : null}
 
           {digimon.attributes.length > 0 ? (
-            <div className="flex">
-              <h1 className="text-3xl text-white">
+            <div className="flex gap-2 items-center justify-center">
+              <h1 className="text-3xl text-white text-center">
                 {digimon.attributes[0].attribute}
               </h1>
               {digimon.attributes[0].attribute == "Vaccine" ? (
@@ -133,6 +135,55 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           ) : (
             <h1 className="text-3xl text-white">Atributo: Desconhecido</h1>
           )}
+          <h1 className="text-3xl text-white text-center sm:text-start">
+            Year of Release:
+            {" " + digimon.releaseDate}
+          </h1>
+          <h1 className="text-3xl text-white text-center mb-3">Campos: </h1>
+          {digimon.fields.length > 0 ? (
+            <ul className="w-full flex items-center flex-wrap justify-start gap-4">
+              {digimon.fields.map((field, index) => (
+                <li key={index} className="flex gap-2 items-center">
+                  {field.field == "Metal Empire" ? (
+                    <Image src={"/Me.webp"} width={50} height={50} alt="ME" />
+                  ) : null}
+                  {field.field == "Nature Spirits" ? (
+                    <Image src={"/NS.webp"} width={50} height={50} alt="NS" />
+                  ) : null}
+                  {field.field == "Nightmare Soldiers" ? (
+                    <Image src={"/NSo.webp"} width={50} height={50} alt="NSo" />
+                  ) : null}
+                  {field.field == "Unknown" ? (
+                    <Image
+                      src={"/desconhecidoCampo.png"}
+                      width={50}
+                      height={50}
+                      alt="Unknown"
+                    />
+                  ) : null}
+                  {field.field == "Dragon's Roar" ? (
+                    <Image src={"/DR.webp"} width={50} height={50} alt="DR" />
+                  ) : null}
+                  {field.field == "Dark Area" ? (
+                    <Image src={"/DA.png"} width={50} height={50} alt="DA" />
+                  ) : null}
+                  {field.field == "Wind Guardians" ? (
+                    <Image src={"/WG.webp"} width={50} height={50} alt="WG" />
+                  ) : null}
+                  {field.field == "Deep Savers" ? (
+                    <Image src={"/DS.webp"} width={50} height={50} alt="DS" />
+                  ) : null}
+                  {field.field == "Virus Busters" ? (
+                    <Image src={"/VB.webp"} width={50} height={50} alt="VB" />
+                  ) : null}
+                  {field.field == "Jungle Troopers" ? (
+                    <Image src={"/JT.webp"} width={50} height={50} alt="JT" />
+                  ) : null}
+                  <h1 className="text-1xl text-white">{field.field}</h1>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
     </div>
