@@ -186,6 +186,7 @@ export const selectField = [
   { value: "Deep Savers", label: "Deep Savers" },
   { value: "Virus Busters", label: "Virus Busters" },
   { value: "Jungle Troopers", label: "Jungle Troopers" },
+  { value: "Unknown", label: "Unknown" },
 ];
 
 export const selectDate = [
