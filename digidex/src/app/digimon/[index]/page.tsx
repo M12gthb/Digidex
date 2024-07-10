@@ -3,6 +3,12 @@ import { IDigimonInfos } from "@/interfaces/Digimon";
 import { api } from "@/services/api";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface DigimonProps {
   params: { index: string };
@@ -50,7 +56,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
 
   return (
     <div className="min-h-[70vh]">
-      <h1 className="w-full text-3xl text-center text-white mt-3 mb-6 flex items-center justify-center">
+      <h1 className="w-full text-3xl text-center text-gray-200 mt-3 mb-6 flex items-center justify-center">
         {digimon.name}
       </h1>
       <div className="flex items-center flex-col sm:flex-row mb-3 sm:px-4 gap-3">
@@ -81,7 +87,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           )}
 
           {digimon.xAntibody == true ? (
-            <h1 className="text-3xl text-white text-center">Anticorpo X</h1>
+            <h1 className="text-3xl text-white text-center">X-Antibody</h1>
           ) : null}
 
           {digimon.attributes.length > 0 ? (
@@ -139,9 +145,9 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
             Year of Release:
             {" " + digimon.releaseDate}
           </h1>
-          <h1 className="text-3xl text-white text-center mb-3">Campos: </h1>
+          <h1 className="text-3xl text-white text-center mb-3">Fields: </h1>
           {digimon.fields.length > 0 ? (
-            <ul className="w-full flex items-center flex-wrap justify-start gap-4">
+            <ul className="w-full grid grid-cols-1 sm:text-sm sm:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-2">
               {digimon.fields.map((field, index) => (
                 <li key={index} className="flex gap-2 items-center">
                   {field.field == "Metal Empire" ? (
@@ -186,6 +192,36 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           ) : null}
         </div>
       </div>
+
+      {digimon.descriptions.length > 0 ? (
+        <div>
+          <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
+            Digimon Description
+          </h1>
+          <p className="w-full text-sm px-4 text-white mb-6">
+            {digimon.descriptions[1].description}
+          </p>
+        </div>
+      ) : null}
+
+      {digimon.skills.length > 0 ? (
+        <ul className="w-full px-6 mb-6">
+          <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
+            Skills
+          </h1>
+          {digimon.skills.map((skill) => (
+            <Accordion type="single" key={skill.id} collapsible>
+              <AccordionItem
+                className="text-base px-2 text-center text-gray-200 "
+                value={"item-" + String(skill.id)}
+              >
+                <AccordionTrigger>{skill.skill}</AccordionTrigger>
+                <AccordionContent>{skill.description}</AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 };
