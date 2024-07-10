@@ -281,7 +281,7 @@ const Home = () => {
         </div>
         <ul className="flex items-center justify-center flex-col gap-5">
           <h1 className="text-4xl text-white leading-relaxed text-center">
-            Digimons não encontrados!
+            Digimons not found!
           </h1>
           <Image
             src={"/alphamon.png"}
@@ -294,7 +294,7 @@ const Home = () => {
           onClick={reloadPage}
           className="w-40 h-8 bg-blue-500 text-white mt-3"
         >
-          Tente Novamente
+          Try again
         </Button>
       </main>
     );
@@ -310,7 +310,7 @@ const Home = () => {
         <div className="flex flex-col md:flex-row gap-2.5">
           <Select onValueChange={handleLevelFilter}>
             <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded-sm">
-              <SelectValue placeholder="Filtro" />
+              <SelectValue placeholder="Filter" />
             </SelectTrigger>
             <SelectContent className="bg-black text-cyan-50 border-none cursor-pointer">
               {selectLevel.map((item) => (
@@ -332,7 +332,7 @@ const Home = () => {
           </Select>
           <Select onValueChange={handleSortOrder}>
             <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded-sm">
-              <SelectValue placeholder="Ordenação" />
+              <SelectValue placeholder="ordering" />
             </SelectTrigger>
             <SelectContent className="bg-black text-cyan-50 border-none cursor-pointer">
               <SelectItem
@@ -351,13 +351,13 @@ const Home = () => {
                 className="bg-black text-cyan-50 border-none cursor-pointer"
                 value="desId"
               >
-                descendente
+                descendant
               </SelectItem>
               <SelectItem
                 className="bg-black text-cyan-50 border-none cursor-pointer"
                 value="ascId"
               >
-                ascendente
+                ascending
               </SelectItem>
             </SelectContent>
           </Select>
@@ -366,7 +366,7 @@ const Home = () => {
       <div className="h-15 flex items-center w-full mb-7 justify-center">
         <Popover>
           <PopoverTrigger className="w-[250px] h-10  bg-blue-500 text-white rounded">
-            Filtros personalizados
+            Custom filters
           </PopoverTrigger>
           <PopoverContent className="bg-black">
             <div className="w-full h-full flex flex-col gap-1">
@@ -472,7 +472,7 @@ const Home = () => {
             onClick={loadMoreDigimons}
             className="mt-4 p-2 bg-blue-500 text-white rounded"
           >
-            Carregar mais Digimons
+            Load more digimon
           </Button>
         </div>
       )}

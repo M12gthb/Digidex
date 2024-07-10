@@ -12,7 +12,7 @@ const CustomInputHome: React.FC<CustomInputProps> = ({ onChange, value }) => {
     <div className="border-none bg-zinc-700 rounded h-[40px] w-full max-w-[500px] text-gray-300 relative">
       <Input
         type="search"
-        placeholder="Pesquise seu digimon aqui..."
+        placeholder="Search for your digimon here..."
         className="border-none h-[100%] placeholder-custom text-xs sm:text-sm"
         value={value}
         onChange={onChange}
