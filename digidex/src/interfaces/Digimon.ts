@@ -68,3 +68,11 @@ export interface IDigimonInfos {
   nextEvolutions: Array<IEvolutions>;
   isFavorite?: boolean;
 }
+
+export interface IDigimonEvo {
+  id: number;
+  digimon: string;
+  condition: string;
+  image: string;
+  url: string;
+}
