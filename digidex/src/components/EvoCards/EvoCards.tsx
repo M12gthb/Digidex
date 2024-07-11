@@ -16,10 +16,10 @@ function EvoCards({ digimon }: { digimon: IDigimonEvo }) {
   return (
     <Link
       href={`/digimon/${digimon.id}`}
-      className="w-[200px] h-[200px] relative group hover:opacity-90"
+      className="w-[200px] h-[230px] relative group hover:opacity-90"
     >
       <Card
-        className="w-[200px] h-[200px] mb-[10px] py-[10px] px-0 flex items-center flex-col"
+        className="w-[200px] h-[230px] mb-[10px] py-[10px] px-0 flex items-center flex-col"
         style={{
           backgroundImage: gradientBackground,
           border: "none",
