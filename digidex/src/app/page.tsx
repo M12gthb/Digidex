@@ -1,5 +1,4 @@
 "use client";
-// Home.tsx
 import React, { useEffect, useState } from "react";
 import { useDigimonContext } from "@/context/DigimonContext";
 import CustomInputHome from "@/components/CustomInputPage";
@@ -82,43 +81,43 @@ const Home = () => {
   }
 
   return (
-    <main className="bg-zinc-800 min-h-[70vh] p-4 flex items-center flex-col">
+    <main className="bg-zinc-800 min-h-[70vh] p-4 flex items-center flex-col relative">
       <section className="border-none mb-5 flex flex-col md:flex-row w-full gap-2.5 items-center justify-center">
         <CustomInputHome
           onChange={(e) => setSearchInput(e.target.value)}
           value={searchInput}
         />
-        <div className="flex flex-col md:flex-row gap-2.5">
+        <div className="flex flex-col md:flex-row gap-2.5 relative">
           <Select onValueChange={handleSortOrder}>
-            <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded">
+            <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded relative">
               <SelectValue placeholder="ordering" />
+              <SelectContent className="absolute top-full left-0 mt-1 bg-black text-cyan-50 border-none cursor-pointer z-10">
+                <SelectItem
+                  className="bg-black text-cyan-50 border-none cursor-pointer"
+                  value="asc"
+                >
+                  a to z
+                </SelectItem>
+                <SelectItem
+                  className="bg-black text-cyan-50 border-none cursor-pointer"
+                  value="des"
+                >
+                  z to a
+                </SelectItem>
+                <SelectItem
+                  className="bg-black text-cyan-50 border-none cursor-pointer"
+                  value="desId"
+                >
+                  descendant
+                </SelectItem>
+                <SelectItem
+                  className="bg-black text-cyan-50 border-none cursor-pointer"
+                  value="ascId"
+                >
+                  ascending
+                </SelectItem>
+              </SelectContent>
             </SelectTrigger>
-            <SelectContent className="bg-black text-cyan-50 border-none cursor-pointer">
-              <SelectItem
-                className="bg-black text-cyan-50 border-none cursor-pointer"
-                value="asc"
-              >
-                a to z
-              </SelectItem>
-              <SelectItem
-                className="bg-black text-cyan-50 border-none cursor-pointer"
-                value="des"
-              >
-                z to a
-              </SelectItem>
-              <SelectItem
-                className="bg-black text-cyan-50 border-none cursor-pointer"
-                value="desId"
-              >
-                descendant
-              </SelectItem>
-              <SelectItem
-                className="bg-black text-cyan-50 border-none cursor-pointer"
-                value="ascId"
-              >
-                ascending
-              </SelectItem>
-            </SelectContent>
           </Select>
         </div>
       </section>

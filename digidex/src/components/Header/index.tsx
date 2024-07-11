@@ -61,7 +61,6 @@ function Header() {
     }
   };
 
-  // Verifica se favoriteDigimons não é undefined antes de usar o filtro
   const filteredDigimons = favoriteDigimons
     ? favoriteDigimons.filter(
         (digimon) =>

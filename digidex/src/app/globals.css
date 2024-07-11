@@ -16,20 +16,20 @@
   }
 
   ul {
-    scrollbar-width: auto; /* exibe a barra de rolagem apenas quando necessário */
+    scrollbar-width: auto; 
     scrollbar-color: gray transparent;
-    overflow-y: hidden; /* oculta a barra de rolagem por padrão */
+    overflow-y: hidden; 
     overflow-x: hidden;
   }
 
   ul:hover {
-    overflow-y: auto; /* torna a barra de rolagem visível ao passar o mouse */
+    overflow-y: auto; 
     overflow-x: auto;
-    scrollbar-width: thin; /* ajusta a largura da barra de rolagem ao aparecer */
+    scrollbar-width: thin; 
   }
 
   ul::-webkit-scrollbar {
-    width: 6px; /* largura da barra de rolagem */
+    width: 6px; 
   }
 
   ul::-webkit-scrollbar-track {
@@ -38,11 +38,11 @@
   }
 
   ul::-webkit-scrollbar-thumb {
-    background-color: #333; /* cor cinza quase preto */
-    border-radius: 3px; /* raio da borda da barra de rolagem */
+    background-color: #333; 
+    border-radius: 3px; 
   }
   span {
-    scrollbar-width: auto; /* exibe a barra de rolagem apenas quando necessário */
+    scrollbar-width: auto; 
     scrollbar-color: gray transparent;
     overflow-x: hidden;
     overflow-y: hidden;
