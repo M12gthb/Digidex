@@ -19,10 +19,12 @@
     scrollbar-width: auto; /* exibe a barra de rolagem apenas quando necessário */
     scrollbar-color: gray transparent;
     overflow-y: hidden; /* oculta a barra de rolagem por padrão */
+    overflow-x: hidden;
   }
 
   ul:hover {
     overflow-y: auto; /* torna a barra de rolagem visível ao passar o mouse */
+    overflow-x: auto;
     scrollbar-width: thin; /* ajusta a largura da barra de rolagem ao aparecer */
   }
 
@@ -36,6 +38,32 @@
   }
 
   ul::-webkit-scrollbar-thumb {
+    background-color: #333; /* cor cinza quase preto */
+    border-radius: 3px; /* raio da borda da barra de rolagem */
+  }
+  span {
+    scrollbar-width: auto; /* exibe a barra de rolagem apenas quando necessário */
+    scrollbar-color: gray transparent;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+  span:hover {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin; /* ajusta a largura da barra de rolagem ao aparecer */
+  }
+
+  span::-webkit-scrollbar {
+    width: 6px; /* largura da barra de rolagem */
+  }
+
+  span::-webkit-scrollbar-track {
+    background: transparent;
+    padding: 2px;
+  }
+
+  span::-webkit-scrollbar-thumb {
     background-color: #333; /* cor cinza quase preto */
     border-radius: 3px; /* raio da borda da barra de rolagem */
   }
