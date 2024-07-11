@@ -115,7 +115,7 @@ function Header() {
                   >
                     <div className="flex items-center gap-x-2">
                       <Image
-                        src={digimon.images[0].href}
+                        src={digimon.image}
                         alt={digimon.name}
                         width={70}
                         height={70}

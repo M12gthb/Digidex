@@ -8,24 +8,24 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { IDigimon, IDigimonInfos } from "@/interfaces/Digimon";
+import { IDigimon } from "@/interfaces/Digimon";
 import { api } from "@/services/api";
 
 interface DigimonContextProps {
-  digimons: IDigimonInfos[];
-  digimonsInfos: IDigimonInfos[];
-  displayedDigimons: IDigimonInfos[];
-  pageDigimons: IDigimonInfos[];
+  digimons: IDigimon[];
+  digimonsInfos: IDigimon[];
+  displayedDigimons: IDigimon[];
+  pageDigimons: IDigimon[];
   searchTerm: string;
   searchTermHeader: string;
   setSearchTerm: (term: string) => void;
   setSearchTermHeader: (term: string) => void;
-  setDisplayedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
-  setPagedDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
-  setDigimons: Dispatch<SetStateAction<IDigimonInfos[]>>;
+  setDisplayedDigimons: Dispatch<SetStateAction<IDigimon[]>>;
+  setPagedDigimons: Dispatch<SetStateAction<IDigimon[]>>;
+  setDigimons: Dispatch<SetStateAction<IDigimon[]>>;
   loadMoreDigimons: () => void;
-  toggleFavorite: (updatedDigimon: IDigimonInfos) => void;
-  favoriteDigimons: IDigimonInfos[];
+  toggleFavorite: (updatedDigimon: IDigimon) => void;
+  favoriteDigimons: IDigimon[];
   DIGIMONS_PER_PAGE: number;
   setCurrentSortOrder: Dispatch<SetStateAction<string>>;
   setCurrentFilterLevel: Dispatch<SetStateAction<string>>;
@@ -33,7 +33,7 @@ interface DigimonContextProps {
   setCurrentAttributeLevel: Dispatch<SetStateAction<string>>;
   setCurrentFieldLevel: Dispatch<SetStateAction<string>>;
   setCurrentDateLevel: Dispatch<SetStateAction<string>>;
-  applyFiltersAndSort: (digimons: IDigimonInfos[]) => IDigimonInfos[];
+  applyFiltersAndSort: (digimons: IDigimon[]) => IDigimon[];
   currentSortOrder: string;
   currentFilterLevel: string;
   currentTypeLevel: string;
@@ -51,13 +51,11 @@ const DigimonContext = createContext<DigimonContextProps | undefined>(
 );
 
 export const DigimonProvider = ({ children }: { children: ReactNode }) => {
-  const [digimons, setDigimons] = useState<IDigimonInfos[]>([]);
-  const [digimonsInfos, setDigimonsInfos] = useState<IDigimonInfos[]>([]);
-  const [displayedDigimons, setDisplayedDigimons] = useState<IDigimonInfos[]>(
-    []
-  );
-  const [pageDigimons, setPagedDigimons] = useState<IDigimonInfos[]>([]);
-  const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimonInfos[]>([]);
+  const [digimons, setDigimons] = useState<IDigimon[]>([]);
+  const [digimonsInfos, setDigimonsInfos] = useState<IDigimon[]>([]);
+  const [displayedDigimons, setDisplayedDigimons] = useState<IDigimon[]>([]);
+  const [pageDigimons, setPagedDigimons] = useState<IDigimon[]>([]);
+  const [favoriteDigimons, setFavoriteDigimons] = useState<IDigimon[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermHeader, setSearchTermHeader] = useState("");
@@ -78,16 +76,9 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         const response = await api.get("/digimon?pageSize=1460");
         const digimonData = response.data.content;
         setDigimons(digimonData);
-
-        const infosPromises = digimonData.map(async (element: IDigimon) => {
-          const responseInfos = await api.get(element.href);
-          return responseInfos.data;
-        });
-
-        const infos = await Promise.all(infosPromises);
-        setDigimonsInfos(infos);
-        setDisplayedDigimons(infos.slice(0, 1460));
-        setPagedDigimons(infos.slice(0, DIGIMONS_PER_PAGE));
+        setDigimonsInfos(digimonData);
+        setDisplayedDigimons(digimonData.slice(0, 1460));
+        setPagedDigimons(digimonData.slice(0, DIGIMONS_PER_PAGE));
         setErrorCards(false);
       } catch (err) {
         setErrorCards(true);
@@ -96,6 +87,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
       }
     };
+
     getDigimons();
     loadFavoritesFromLocalStorage();
   }, []);
@@ -116,16 +108,12 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   ]);
 
   const loadFavoritesFromLocalStorage = () => {
-    const storedFavorites: IDigimonInfos[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith("favoriteDigimon-")) {
-        const favoriteDigimon = localStorage.getItem(key);
-        if (favoriteDigimon) {
-          storedFavorites.push(JSON.parse(favoriteDigimon));
-        }
-      }
-    }
+    const storedFavorites = Array.from({ length: localStorage.length })
+      .map((_, i) => localStorage.key(i))
+      .filter((key) => key?.startsWith("favoriteDigimon-"))
+      .map((key) => key && JSON.parse(localStorage.getItem(key) || ""))
+      .filter(Boolean);
+
     setFavoriteDigimons(storedFavorites);
   };
 
@@ -135,31 +123,33 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
       nextPage * DIGIMONS_PER_PAGE,
       (nextPage + 1) * DIGIMONS_PER_PAGE
     );
-    setPagedDigimons([...pageDigimons, ...newDigimons]);
+    setPagedDigimons((prev) => [...prev, ...newDigimons]);
     setCurrentPage(nextPage);
   };
 
-  const toggleFavorite = (updatedDigimon: IDigimonInfos) => {
-    const isFavorite = favoriteDigimons.some(
-      (digimon) => digimon.id === updatedDigimon.id
-    );
-    let updatedFavorites;
-    if (isFavorite) {
-      updatedFavorites = favoriteDigimons.filter(
-        (digimon) => digimon.id !== updatedDigimon.id
+  const toggleFavorite = (updatedDigimon: IDigimon) => {
+    setFavoriteDigimons((prevFavorites) => {
+      const isFavorite = prevFavorites.some(
+        (digimon) => digimon.id === updatedDigimon.id
       );
-      localStorage.removeItem(`favoriteDigimon-${updatedDigimon.id}`);
-    } else {
-      updatedFavorites = [...favoriteDigimons, updatedDigimon];
-      localStorage.setItem(
-        `favoriteDigimon-${updatedDigimon.id}`,
-        JSON.stringify(updatedDigimon)
-      );
-    }
-    setFavoriteDigimons(updatedFavorites);
+      const updatedFavorites = isFavorite
+        ? prevFavorites.filter((digimon) => digimon.id !== updatedDigimon.id)
+        : [...prevFavorites, updatedDigimon];
+
+      if (isFavorite) {
+        localStorage.removeItem(`favoriteDigimon-${updatedDigimon.id}`);
+      } else {
+        localStorage.setItem(
+          `favoriteDigimon-${updatedDigimon.id}`,
+          JSON.stringify(updatedDigimon)
+        );
+      }
+
+      return updatedFavorites;
+    });
   };
 
-  const applyFiltersAndSort = (digimons: IDigimonInfos[]) => {
+  const applyFiltersAndSort = (digimons: IDigimon[]) => {
     let filtered = digimons;
 
     if (searchTerm) {
@@ -168,61 +158,18 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
       );
     }
 
-    if (currentFilterLevel === "xAntibody") {
-      filtered = filtered.filter((element) => element.xAntibody === true);
-    } else if (currentFilterLevel !== "All") {
-      filtered = filtered.filter(
-        (digimon) =>
-          digimon.levels &&
-          digimon.levels.some((level) => level.level === currentFilterLevel)
-      );
-    }
-
-    if (currentTypeLevel !== "All") {
-      filtered = filtered.filter(
-        (digimon) =>
-          digimon.types &&
-          digimon.types.some((type) => type.type === currentTypeLevel)
-      );
-    }
-
-    if (currentAttributeLevel !== "All") {
-      filtered = filtered.filter(
-        (digimon) =>
-          digimon.attributes &&
-          digimon.attributes.some(
-            (attribute) => attribute.attribute === currentAttributeLevel
-          )
-      );
-    }
-
-    if (currentFieldLevel !== "All") {
-      filtered = filtered.filter(
-        (digimon) =>
-          digimon.fields &&
-          digimon.fields.some((field) => field.field === currentFieldLevel)
-      );
-    }
-
-    if (currentDateLevel !== "All") {
-      filtered = filtered.filter(
-        (digimon) => digimon.releaseDate === currentDateLevel
-      );
-    }
-
-    const sorted = filtered.sort((a, b) => {
-      if (currentSortOrder === "asc") {
-        return a.name.localeCompare(b.name);
-      } else if (currentSortOrder === "des") {
-        return b.name.localeCompare(a.name);
-      } else if (currentSortOrder === "desId") {
-        return b.id - a.id;
-      } else {
-        return a.id - b.id;
+    return filtered.sort((a, b) => {
+      switch (currentSortOrder) {
+        case "asc":
+          return a.name.localeCompare(b.name);
+        case "des":
+          return b.name.localeCompare(a.name);
+        case "desId":
+          return b.id - a.id;
+        default:
+          return a.id - b.id;
       }
     });
-
-    return sorted;
   };
 
   return (

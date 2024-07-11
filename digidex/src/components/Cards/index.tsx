@@ -2,14 +2,14 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { useColor } from "color-thief-react";
-import { IDigimonInfos } from "@/interfaces/Digimon";
+import { IDigimon } from "@/interfaces/Digimon";
 import Link from "next/link";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useDigimonContext } from "@/context/DigimonContext";
 
-export function Cards({ digimon }: { digimon: IDigimonInfos }) {
+export function Cards({ digimon }: { digimon: IDigimon }) {
   const { toggleFavorite, favoriteDigimons } = useDigimonContext();
-  const { data: color } = useColor(digimon.images[0].href, "hex", {
+  const { data: color } = useColor(digimon.image, "hex", {
     crossOrigin: "anonymous",
   });
 
@@ -34,9 +34,7 @@ export function Cards({ digimon }: { digimon: IDigimonInfos }) {
       >
         <CardContent className="p-0">
           <Image
-            src={
-              digimon.images[0].href ? digimon.images[0].href : "/images.png"
-            }
+            src={digimon.image ? digimon.image : "/images.png"}
             alt={digimon.name}
             width={100}
             height={80}

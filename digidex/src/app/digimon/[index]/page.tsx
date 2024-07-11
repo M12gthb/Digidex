@@ -19,6 +19,17 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
   const [digimon, setDigimon] = useState<IDigimonInfos | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToTop();
+  }, []);
+
   useEffect(() => {
     if (params.index === undefined) {
       params.index === "1";
@@ -237,7 +248,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
             Prior Evolutions
           </h1>
-          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[210px]">
+          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[240px]">
             {digimon.priorEvolutions.map((digimon) => (
               <EvoCards key={digimon.id} digimon={digimon} />
             ))}
@@ -249,7 +260,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
           <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
             Next Evolutions
           </h1>
-          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[210px]">
+          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[240px]">
             {digimon.nextEvolutions.map((digimon) => (
               <EvoCards key={digimon.id} digimon={digimon} />
             ))}
