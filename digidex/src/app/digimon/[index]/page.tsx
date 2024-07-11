@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import EvoCards from "@/components/EvoCards/EvoCards";
 
 interface DigimonProps {
   params: { index: string };
@@ -17,6 +18,7 @@ interface DigimonProps {
 const Digimon: React.FC<DigimonProps> = ({ params }) => {
   const [digimon, setDigimon] = useState<IDigimonInfos | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (params.index === undefined) {
       params.index === "1";
@@ -40,7 +42,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
     return (
       <div className="min-h-[70vh] flex items-center justify-center flex-col">
         <Image src={"/grey.gif"} width={300} height={300} alt="" />
-        <h1 className="text-white text-2xl">Procurando...</h1>
+        <h1 className="text-white text-2xl">Looking for...</h1>
       </div>
     );
   }
@@ -55,7 +57,7 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
   }
 
   return (
-    <div className="min-h-[70vh]">
+    <div className="min-h-[70vh] pb-4">
       <h1 className="w-full text-3xl text-center text-gray-200 mt-3 mb-6 flex items-center justify-center">
         {digimon.name}
       </h1>
@@ -145,63 +147,70 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
             Year of Release:
             {" " + digimon.releaseDate}
           </h1>
-          <h1 className="text-3xl text-white text-center mb-3">Fields: </h1>
           {digimon.fields.length > 0 ? (
-            <ul className="w-full grid grid-cols-1 sm:text-sm sm:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-              {digimon.fields.map((field, index) => (
-                <li key={index} className="flex gap-2 items-center">
-                  {field.field == "Metal Empire" ? (
-                    <Image src={"/Me.webp"} width={50} height={50} alt="ME" />
-                  ) : null}
-                  {field.field == "Nature Spirits" ? (
-                    <Image src={"/NS.webp"} width={50} height={50} alt="NS" />
-                  ) : null}
-                  {field.field == "Nightmare Soldiers" ? (
-                    <Image src={"/NSo.webp"} width={50} height={50} alt="NSo" />
-                  ) : null}
-                  {field.field == "Unknown" ? (
-                    <Image
-                      src={"/desconhecidoCampo.png"}
-                      width={50}
-                      height={50}
-                      alt="Unknown"
-                    />
-                  ) : null}
-                  {field.field == "Dragon's Roar" ? (
-                    <Image src={"/DR.webp"} width={50} height={50} alt="DR" />
-                  ) : null}
-                  {field.field == "Dark Area" ? (
-                    <Image src={"/DA.png"} width={50} height={50} alt="DA" />
-                  ) : null}
-                  {field.field == "Wind Guardians" ? (
-                    <Image src={"/WG.webp"} width={50} height={50} alt="WG" />
-                  ) : null}
-                  {field.field == "Deep Savers" ? (
-                    <Image src={"/DS.webp"} width={50} height={50} alt="DS" />
-                  ) : null}
-                  {field.field == "Virus Busters" ? (
-                    <Image src={"/VB.webp"} width={50} height={50} alt="VB" />
-                  ) : null}
-                  {field.field == "Jungle Troopers" ? (
-                    <Image src={"/JT.webp"} width={50} height={50} alt="JT" />
-                  ) : null}
-                  <h1 className="text-1xl text-white">{field.field}</h1>
-                </li>
-              ))}
-            </ul>
+            <>
+              <h1 className="text-3xl text-white text-center mb-3">Fields: </h1>
+              <ul className="w-full grid grid-cols-1 sm:text-sm sm:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                {digimon.fields.map((field, index) => (
+                  <li key={index} className="flex gap-2 items-center">
+                    {field.field == "Metal Empire" ? (
+                      <Image src={"/Me.webp"} width={50} height={50} alt="ME" />
+                    ) : null}
+                    {field.field == "Nature Spirits" ? (
+                      <Image src={"/NS.webp"} width={50} height={50} alt="NS" />
+                    ) : null}
+                    {field.field == "Nightmare Soldiers" ? (
+                      <Image
+                        src={"/NSo.webp"}
+                        width={50}
+                        height={50}
+                        alt="NSo"
+                      />
+                    ) : null}
+                    {field.field == "Unknown" ? (
+                      <Image
+                        src={"/desconhecidoCampo.png"}
+                        width={50}
+                        height={50}
+                        alt="Unknown"
+                      />
+                    ) : null}
+                    {field.field == "Dragon's Roar" ? (
+                      <Image src={"/DR.webp"} width={50} height={50} alt="DR" />
+                    ) : null}
+                    {field.field == "Dark Area" ? (
+                      <Image src={"/DA.png"} width={50} height={50} alt="DA" />
+                    ) : null}
+                    {field.field == "Wind Guardians" ? (
+                      <Image src={"/WG.webp"} width={50} height={50} alt="WG" />
+                    ) : null}
+                    {field.field == "Deep Savers" ? (
+                      <Image src={"/DS.webp"} width={50} height={50} alt="DS" />
+                    ) : null}
+                    {field.field == "Virus Busters" ? (
+                      <Image src={"/VB.webp"} width={50} height={50} alt="VB" />
+                    ) : null}
+                    {field.field == "Jungle Troopers" ? (
+                      <Image src={"/JT.webp"} width={50} height={50} alt="JT" />
+                    ) : null}
+                    <h1 className="text-1xl text-white">{field.field}</h1>
+                  </li>
+                ))}
+              </ul>
+            </>
           ) : null}
         </div>
       </div>
 
-      {digimon.descriptions.length > 0 ? (
-        <div>
+      {digimon.descriptions.length > 1 ? (
+        <>
           <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
             Digimon Description
           </h1>
           <p className="w-full text-sm px-4 text-white mb-6">
             {digimon.descriptions[1].description}
           </p>
-        </div>
+        </>
       ) : null}
 
       {digimon.skills.length > 0 ? (
@@ -221,6 +230,31 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
             </Accordion>
           ))}
         </ul>
+      ) : null}
+
+      {digimon.priorEvolutions.length > 0 ? (
+        <>
+          <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
+            Prior Evolutions
+          </h1>
+          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[210px]">
+            {digimon.priorEvolutions.map((digimon) => (
+              <EvoCards key={digimon.id} digimon={digimon} />
+            ))}
+          </span>
+        </>
+      ) : null}
+      {digimon.nextEvolutions.length > 0 ? (
+        <>
+          <h1 className="w-full text-3xl text-center text-gray-300 mt-7 mb-6 flex items-center justify-center">
+            Next Evolutions
+          </h1>
+          <span className="w-full flex gap-2 px-2 overflow-x-hidden h-[210px]">
+            {digimon.nextEvolutions.map((digimon) => (
+              <EvoCards key={digimon.id} digimon={digimon} />
+            ))}
+          </span>
+        </>
       ) : null}
     </div>
   );
