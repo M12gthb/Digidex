@@ -7,6 +7,8 @@ import React, {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useMemo,
+  useCallback,
 } from "react";
 import { IDigimon } from "@/interfaces/Digimon";
 import { api } from "@/services/api";
@@ -107,7 +109,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     currentSortOrder,
   ]);
 
-  const loadFavoritesFromLocalStorage = () => {
+  const loadFavoritesFromLocalStorage = useCallback(() => {
     const storedFavorites = Array.from({ length: localStorage.length })
       .map((_, i) => localStorage.key(i))
       .filter((key) => key?.startsWith("favoriteDigimon-"))
@@ -115,9 +117,9 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
       .filter(Boolean);
 
     setFavoriteDigimons(storedFavorites);
-  };
+  }, []);
 
-  const loadMoreDigimons = () => {
+  const loadMoreDigimons = useCallback(() => {
     const nextPage = currentPage + 1;
     const newDigimons = displayedDigimons.slice(
       nextPage * DIGIMONS_PER_PAGE,
@@ -125,9 +127,9 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     );
     setPagedDigimons((prev) => [...prev, ...newDigimons]);
     setCurrentPage(nextPage);
-  };
+  }, [currentPage, displayedDigimons]);
 
-  const toggleFavorite = (updatedDigimon: IDigimon) => {
+  const toggleFavorite = useCallback((updatedDigimon: IDigimon) => {
     setFavoriteDigimons((prevFavorites) => {
       const isFavorite = prevFavorites.some(
         (digimon) => digimon.id === updatedDigimon.id
@@ -147,68 +149,105 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
 
       return updatedFavorites;
     });
-  };
+  }, []);
 
-  const applyFiltersAndSort = (digimons: IDigimon[]) => {
-    let filtered = digimons;
+  const applyFiltersAndSort = useCallback(
+    (digimons: IDigimon[]) => {
+      let filtered = digimons;
 
-    if (searchTerm) {
-      filtered = filtered.filter((digimon) =>
-        digimon.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    return filtered.sort((a, b) => {
-      switch (currentSortOrder) {
-        case "asc":
-          return a.name.localeCompare(b.name);
-        case "des":
-          return b.name.localeCompare(a.name);
-        case "desId":
-          return b.id - a.id;
-        default:
-          return a.id - b.id;
+      if (searchTerm) {
+        filtered = filtered.filter((digimon) =>
+          digimon.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       }
-    });
-  };
+
+      return filtered.sort((a, b) => {
+        switch (currentSortOrder) {
+          case "asc":
+            return a.name.localeCompare(b.name);
+          case "des":
+            return b.name.localeCompare(a.name);
+          case "desId":
+            return b.id - a.id;
+          default:
+            return a.id - b.id;
+        }
+      });
+    },
+    [searchTerm, currentSortOrder]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      digimons,
+      digimonsInfos,
+      displayedDigimons,
+      pageDigimons,
+      searchTerm,
+      searchTermHeader,
+      setSearchTerm,
+      setSearchTermHeader,
+      setDisplayedDigimons,
+      setPagedDigimons,
+      setDigimons,
+      loadMoreDigimons,
+      toggleFavorite,
+      favoriteDigimons,
+      DIGIMONS_PER_PAGE,
+      setCurrentSortOrder,
+      setCurrentFilterLevel,
+      setCurrentTypeLevel,
+      setCurrentAttributeLevel,
+      setCurrentFieldLevel,
+      setCurrentDateLevel,
+      applyFiltersAndSort,
+      currentSortOrder,
+      currentFilterLevel,
+      currentTypeLevel,
+      currentAttributeLevel,
+      currentFieldLevel,
+      currentDateLevel,
+      loading,
+      setLoading,
+      errorCards,
+      setErrorCards,
+    }),
+    [
+      digimons,
+      digimonsInfos,
+      displayedDigimons,
+      pageDigimons,
+      searchTerm,
+      searchTermHeader,
+      setSearchTerm,
+      setSearchTermHeader,
+      setDisplayedDigimons,
+      setPagedDigimons,
+      setDigimons,
+      loadMoreDigimons,
+      toggleFavorite,
+      favoriteDigimons,
+      DIGIMONS_PER_PAGE,
+      setCurrentSortOrder,
+      setCurrentFilterLevel,
+      setCurrentTypeLevel,
+      setCurrentAttributeLevel,
+      setCurrentFieldLevel,
+      setCurrentDateLevel,
+      applyFiltersAndSort,
+      currentSortOrder,
+      currentFilterLevel,
+      currentTypeLevel,
+      currentAttributeLevel,
+      currentFieldLevel,
+      currentDateLevel,
+      loading,
+      errorCards,
+    ]
+  );
 
   return (
-    <DigimonContext.Provider
-      value={{
-        digimons,
-        digimonsInfos,
-        displayedDigimons,
-        searchTerm,
-        setSearchTerm,
-        loadMoreDigimons,
-        toggleFavorite,
-        favoriteDigimons,
-        pageDigimons,
-        setDisplayedDigimons,
-        setPagedDigimons,
-        DIGIMONS_PER_PAGE,
-        setDigimons,
-        setCurrentSortOrder,
-        setCurrentFilterLevel,
-        applyFiltersAndSort,
-        currentSortOrder,
-        currentFilterLevel,
-        currentTypeLevel,
-        setCurrentTypeLevel,
-        currentAttributeLevel,
-        setCurrentAttributeLevel,
-        currentFieldLevel,
-        setCurrentFieldLevel,
-        setCurrentDateLevel,
-        currentDateLevel,
-        setSearchTermHeader,
-        searchTermHeader,
-        loading,
-        setLoading,
-        setErrorCards,
-        errorCards,
-      }}
-    >
+    <DigimonContext.Provider value={contextValue}>
       {children}
     </DigimonContext.Provider>
   );
