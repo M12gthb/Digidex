@@ -9,7 +9,7 @@ interface CustomInputProps {
 
 const CustomInputHome: React.FC<CustomInputProps> = ({ onChange, value }) => {
   return (
-    <div className="border-none bg-zinc-700 rounded h-[40px] w-full max-w-[500px] text-gray-300 relative">
+    <div className="border-none bg-zinc-700 rounded h-[40px] w-full max-w-[860px] text-gray-300 relative">
       <Input
         type="search"
         placeholder="Search for your digimon here..."
