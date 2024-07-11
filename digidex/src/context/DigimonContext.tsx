@@ -10,6 +10,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { useMediaQuery } from "@react-hook/media-query";
 import { IDigimon } from "@/interfaces/Digimon";
 import { api } from "@/services/api";
 
@@ -70,7 +71,22 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [currentSortOrder, setCurrentSortOrder] = useState<string>("All");
   const [loading, setLoading] = useState(true);
   const [errorCards, setErrorCards] = useState(false);
-  const DIGIMONS_PER_PAGE = 15;
+  const DIGIMONS_PER_PAGE_SMALL = 15;
+  const DIGIMONS_PER_PAGE_MEDIUM = 12;
+  const DIGIMONS_PER_PAGE_LARGE = 20;
+
+  const isMediumScreen = useMediaQuery("(max-width: 1024px)");
+  const isLargeScreen = useMediaQuery("(min-width: 1280px)");
+
+  const DIGIMONS_PER_PAGE = useMemo(() => {
+    if (isLargeScreen) {
+      return DIGIMONS_PER_PAGE_LARGE;
+    } else if (isMediumScreen) {
+      return DIGIMONS_PER_PAGE_MEDIUM;
+    } else {
+      return DIGIMONS_PER_PAGE_SMALL;
+    }
+  }, [isLargeScreen, isMediumScreen]);
 
   useEffect(() => {
     const getDigimons = async () => {
