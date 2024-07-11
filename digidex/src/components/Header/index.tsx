@@ -61,9 +61,14 @@ function Header() {
     }
   };
 
-  const filteredDigimons = favoriteDigimons.filter((digimon) =>
-    digimon.name.toLowerCase().includes(searchTermHeader.toLowerCase())
-  );
+  // Verifica se favoriteDigimons não é undefined antes de usar o filtro
+  const filteredDigimons = favoriteDigimons
+    ? favoriteDigimons.filter(
+        (digimon) =>
+          digimon.name &&
+          digimon.name.toLowerCase().includes(searchTermHeader.toLowerCase())
+      )
+    : [];
 
   return (
     <header className="w-full bg-zinc-900 min-h-[15vh] flex items-center justify-between px-[5%]">
