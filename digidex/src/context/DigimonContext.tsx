@@ -70,7 +70,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   const [currentSortOrder, setCurrentSortOrder] = useState<string>("All");
   const [loading, setLoading] = useState(true);
   const [errorCards, setErrorCards] = useState(false);
-  const DIGIMONS_PER_PAGE = 12;
+  const DIGIMONS_PER_PAGE = 15;
 
   useEffect(() => {
     const getDigimons = async () => {
