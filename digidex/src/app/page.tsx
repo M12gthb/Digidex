@@ -90,7 +90,7 @@ const Home = () => {
         />
         <div className="flex flex-col md:flex-row gap-2.5">
           <Select onValueChange={handleSortOrder}>
-            <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded-sm">
+            <SelectTrigger className="w-[180px] h-9 bg-black text-cyan-50 border-none rounded">
               <SelectValue placeholder="ordering" />
             </SelectTrigger>
             <SelectContent className="bg-black text-cyan-50 border-none cursor-pointer">
