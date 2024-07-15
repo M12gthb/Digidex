@@ -123,7 +123,7 @@ function Header() {
                     </div>
                     <AiFillStar
                       className="text-yellow-500 cursor-pointer hover:text-transparent"
-                      onClick={(e) => {
+                      onClick={(e: { stopPropagation: () => void }) => {
                         e.stopPropagation();
                         toggleFavorite(digimon);
                       }}

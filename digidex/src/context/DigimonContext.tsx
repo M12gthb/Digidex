@@ -126,13 +126,27 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
   ]);
 
   const loadFavoritesFromLocalStorage = useCallback(() => {
-    const storedFavorites = Array.from({ length: localStorage.length })
-      .map((_, i) => localStorage.key(i))
-      .filter((key) => key?.startsWith("favoriteDigimon-"))
-      .map((key) => key && JSON.parse(localStorage.getItem(key) || ""))
-      .filter(Boolean);
-
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favoriteDigimons") || "[]"
+    );
     setFavoriteDigimons(storedFavorites);
+  }, []);
+
+  const toggleFavorite = useCallback((updatedDigimon: IDigimon) => {
+    setFavoriteDigimons((prevFavorites) => {
+      const isFavorite = prevFavorites.some(
+        (digimon) => digimon.id === updatedDigimon.id
+      );
+      const updatedFavorites = isFavorite
+        ? prevFavorites.filter((digimon) => digimon.id !== updatedDigimon.id)
+        : [...prevFavorites, updatedDigimon];
+
+      localStorage.setItem(
+        "favoriteDigimons",
+        JSON.stringify(updatedFavorites)
+      );
+      return updatedFavorites;
+    });
   }, []);
 
   const loadMoreDigimons = useCallback(() => {
@@ -144,28 +158,6 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
     setPagedDigimons((prev) => [...prev, ...newDigimons]);
     setCurrentPage(nextPage);
   }, [currentPage, displayedDigimons]);
-
-  const toggleFavorite = useCallback((updatedDigimon: IDigimon) => {
-    setFavoriteDigimons((prevFavorites) => {
-      const isFavorite = prevFavorites.some(
-        (digimon) => digimon.id === updatedDigimon.id
-      );
-      const updatedFavorites = isFavorite
-        ? prevFavorites.filter((digimon) => digimon.id !== updatedDigimon.id)
-        : [...prevFavorites, updatedDigimon];
-
-      if (isFavorite) {
-        localStorage.removeItem(`favoriteDigimon-${updatedDigimon.id}`);
-      } else {
-        localStorage.setItem(
-          `favoriteDigimon-${updatedDigimon.id}`,
-          JSON.stringify(updatedDigimon)
-        );
-      }
-
-      return updatedFavorites;
-    });
-  }, []);
 
   const applyFiltersAndSort = useCallback(
     (digimons: IDigimon[]) => {
