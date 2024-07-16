@@ -49,6 +49,10 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
     }
   }, [params.index]);
 
+  const toImage = (url: string) => {
+    window.location.replace(url);
+  };
+
   if (loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center flex-col">
@@ -74,11 +78,12 @@ const Digimon: React.FC<DigimonProps> = ({ params }) => {
       </h1>
       <div className="flex items-center flex-col sm:flex-row mb-3 sm:px-4 gap-3">
         <Image
+          onClick={() => toImage(digimon.images[0].href)}
           src={digimon.images[0].href}
           alt={digimon.name}
           width={250}
           height={250}
-          className="rounded-sm sm:w-[400px] sm:h-[400px] flex"
+          className="rounded-sm sm:w-[400px] sm:h-[400px] flex cursor-pointer"
         />
         <div className="flex flex-col sm:items-start h-full gap-3  sm:w-full min-h-[250px] px-2">
           {digimon.levels.length > 0 ? (
