@@ -95,7 +95,7 @@ export const DigimonProvider = ({ children }: { children: ReactNode }) => {
         const digimonData = response.data.content;
         setDigimons(digimonData);
         setDigimonsInfos(digimonData);
-        setDisplayedDigimons(digimonData.slice(0, 1460));
+        setDisplayedDigimons(digimonData.slice(0, 1488));
         setPagedDigimons(digimonData.slice(0, DIGIMONS_PER_PAGE));
         setErrorCards(false);
       } catch (err) {
